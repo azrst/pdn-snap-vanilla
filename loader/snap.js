@@ -1,4 +1,4 @@
-/*! pdnSnap loader — built 2026-07-20 */
+/*! pdnSnap loader — built 2026-07-21 */
 /**
  * Shared postMessage contract — loader ↔ checkout.
  */
