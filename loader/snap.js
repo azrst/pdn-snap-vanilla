@@ -1,4 +1,4 @@
-/*! pdnSnap loader — built 2026-07-21 */
+/*! pdnSnap loader — built 2026-07-22 */
 /**
  * Shared postMessage contract — loader ↔ checkout.
  */
@@ -28,7 +28,7 @@
   global.PdnSnapConfig = {
     /** Base URL for session + charge APIs (no trailing slash). Use proxy locally for CORS. */
     SCRIPT_TOKEN_URL: 'https://api.arcane-magus.site/',
-    CHECKOUT_URL: 'https://cdn.jsdelivr.net/gh/azrst/pdn-snap-vanilla/checkout/',
+    CHECKOUT_URL: 'https://cdn.jsdelivr.net/gh/azrst/pdn-snap-vanilla@main/checkout/index.html',
     /** Mirrored for docs; checkout uses checkout/config.js POLL_INTERVAL_MS */
     POLL_INTERVAL_MS: 4000,
   };
@@ -96,7 +96,13 @@
   var MessageType = global.PdnProtocol.MessageType;
 
   function getCheckoutUrl() {
-    return global.PdnSnapConfig.CHECKOUT_URL;
+    var raw = global.PdnSnapConfig.CHECKOUT_URL;
+    // jsDelivr (and many CDNs) serve a directory listing for folder URLs.
+    // Always load the checkout document itself.
+    if (typeof raw === 'string' && /\/checkout\/?$/.test(raw.replace(/\?.*$/, ''))) {
+      return raw.replace(/\/?(\?.*)?$/, '/index.html$1');
+    }
+    return raw;
   }
 
   function getCheckoutOrigin() {

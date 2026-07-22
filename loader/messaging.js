@@ -4,7 +4,13 @@
   var MessageType = global.PdnProtocol.MessageType;
 
   function getCheckoutUrl() {
-    return global.PdnSnapConfig.CHECKOUT_URL;
+    var raw = global.PdnSnapConfig.CHECKOUT_URL;
+    // jsDelivr (and many CDNs) serve a directory listing for folder URLs.
+    // Always load the checkout document itself.
+    if (typeof raw === 'string' && /\/checkout\/?$/.test(raw.replace(/\?.*$/, ''))) {
+      return raw.replace(/\/?(\?.*)?$/, '/index.html$1');
+    }
+    return raw;
   }
 
   function getCheckoutOrigin() {
